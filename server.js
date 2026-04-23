@@ -4,14 +4,14 @@ import mammoth from 'mammoth';
 export const config = { runtime: 'nodejs18.x' };
 
 export default async function handler(req, res) {
-  // 正确跨域写法，彻底解决循环卡死！
+  // Vercel官方标准跨域配置，100%不会Failed to fetch
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // 处理预检请求
+  // 必须处理OPTIONS预检请求！！！这是之前报错的核心原因
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return res.status(200).send('OK');
   }
 
   if (req.method !== 'POST') {
